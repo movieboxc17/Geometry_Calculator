@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shape Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        select, input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button[type="submit"] {
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Geometry Calculator</h1>
+    <form id="shapeForm">
+        <label for="shape">Choose a shape from the list:</label>
+        <select id="shape" name="shape">
+            <option value="circle">Circle</option>
+            <option value="square">Square</option>
+            <option value="triangle">Triangle</option>
+            <option value="rectangle">Rectangle</option>
+            <option value="parallelogram">Parallelogram</option>
+        </select>
+        <br>
+        <label for="calculation">Choose what to calculate:</label>
+        <select id="calculation" name="calculation">
+            <option value="perimeter">Perimeter</option>
+            <option value="area">Area</option>
+        </select>
+        <br>
+        <div id="inputFields"></div>
+        <br>
+        <button type="submit">Calculate</button>
+    </form>
+
+    <script>
+        document.getElementById('shapeForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            let shape = document.getElementById('shape').value;
+            let calculation = document.getElementById('calculation').value;
+            let formData = new FormData(this);
+            let formObject = {};
+            formData.forEach(function(value, key){
+                formObject[key] = value;
+            });
+
+            let result;
+            switch (shape) {
+                case 'circle':
+                    result = calculateCircle(formObject, calculation);
+                    break;
+                case 'square':
+                    result = calculateSquare(formObject, calculation);
+                    break;
+                case 'triangle':
+                    result = calculateTriangle(formObject, calculation);
+                    break;
+                case 'rectangle':
+                    result = calculateRectangle(formObject, calculation);
+                    break;
+                case 'parallelogram':
+                    result = calculateParallelogram(formObject, calculation);
+                    break;
+                default:
+                    result = "Invalid shape";
+            }
+            alert(result);
+        });
+
+        function calculateCircle(formData, calculation) {
+            let diameter = parseFloat(formData['diameter']);
+            if (calculation === 'perimeter') {
+                return "The circumference of the circle is approximately " + (diameter * Math.PI).toFixed(2);
+            } else if (calculation === 'area') {
+                let radius = diameter / 2;
+                return "The area of the circle is approximately " + (Math.PI * Math.pow(radius, 2)).toFixed(2);
+            }
+        }
+
+        function calculateSquare(formData, calculation) {
+            let sideLength = parseFloat(formData['sideLength']);
+            if (calculation === 'perimeter') {
+                return "The perimeter of the square is " + (sideLength * 4);
+            } else if (calculation === 'area') {
+                return "The area of the square is " + Math.pow(sideLength, 2);
+            }
+        }
+
+        function calculateTriangle(formData, calculation) {
+            let result;
+            if (calculation === 'perimeter') {
+                let side1 = parseFloat(formData['side1']);
+                let side2 = parseFloat(formData['side2']);
+                let side3 = parseFloat(formData['side3']);
+                let perimeter = side1 + side2 + side3;
+                result = "The perimeter of the triangle is " + perimeter;
+            } else if (calculation === 'area') {
+                let base = parseFloat(formData['base']);
+                let height = parseFloat(formData['height']);
+                let area = 0.5 * base * height;
+                result = "The area of the triangle is " + area;
+            }
+            return result;
+        }
+
+        function calculateRectangle(formData, calculation) {
+            let length = parseFloat(formData['length']);
+            let width = parseFloat(formData['width']);
+            if (calculation === 'perimeter') {
+                return "The perimeter of the rectangle is " + (2 * (length + width));
+            } else if (calculation === 'area') {
+                return "The area of the rectangle is " + (length * width);
+            }
+        }
+
+        function calculateParallelogram(formData, calculation) {
+            let side1 = parseFloat(formData['side1']);
+            let side2 = parseFloat(formData['side2']);
+            if (calculation === 'perimeter') {
+                return "The perimeter of the parallelogram is " + (2 * (side1 + side2));
+            } else if (calculation === 'area') {
+                let base = parseFloat(formData['base']);
+                let height = parseFloat(formData['height']);
+                return "The area of the parallelogram is " + (base * height);
+            }
+        }
+
+        document.getElementById('shape').addEventListener('change', function() {
+            let shape = this.value;
+            let inputFields = document.getElementById('inputFields');
+            inputFields.innerHTML = "";
+
+            switch (shape) {
+                case 'circle':
+                    inputFields.innerHTML = "<label for='diameter'>Diameter:</label><input type='number' step='any' name='diameter' id='diameter'>";
+                    break;
+                case 'square':
+                    inputFields.innerHTML = "<label for='sideLength'>Side Length:</label><input type='number' step='any' name='sideLength' id='sideLength'>";
+                    break;
+                case 'triangle':
+                    inputFields.innerHTML = "<label for='side1'>Side 1:</label><input type='number' step='any' name='side1' id='side1'><br>" +
+                                            "<label for='side2'>Side 2:</label><input type='number' step='any' name='side2' id='side2'><br>" +
+                                            "<label for='side3'>Side 3:</label><input type='number' step='any' name='side3' id='side3'><br>" +
+                                            "<label for='base'>Base:</label><input type='number' step='any' name='base' id='base'><br>" +
+                                            "<label for='height'>Height:</label><input type='number' step='any' name='height' id='height'>";
+                    break;
+                case 'rectangle':
+                    inputFields.innerHTML = "<label for='length'>Length:</label><input type='number' step='any' name='length' id='length'><br>" +
+                                            "<label for='width'>Width:</label><input type='number' step='any' name='width' id='width'>";
+                    break;
+                case 'parallelogram':
+                    inputFields.innerHTML = "<label for='side1'>Side 1:</label><input type='number' step='any' name='side1' id='side1'><br>" +
+                                            "<label for='side2'>Side 2:</label><input type='number' step='any' name='side2' id='side2'><br>" +
+                                            "<label for='base'>Base:</label><input type='number' step='any' name='base' id='base'><br>" +
+                                            "<label for='height'>Height:</label><input type='number' step='any' name='height' id='height'>";
+                    break;
+            }
+        });
+    </script>
+</body>
+</html>
